@@ -31,6 +31,9 @@ so:
 source ~/dotfiles/bash_completion.d/tmux
 ```
 
+As the completion function provided by bash-completion evolves, the changes
+will have to be manually merged into this repository.
+
 ## Attribution
 
 This is a modification of the tmux file included with bash-completion. All hail

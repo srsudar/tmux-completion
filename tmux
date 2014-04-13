@@ -2,6 +2,10 @@
 # This file is in the public domain
 # See: http://www.debian-administration.org/articles/317 for how to write more.
 # Usage: Put "source bash_completion_tmux.sh" into your .bashrc
+#
+# The original version was modified to include support for things beyond simple
+# commands. This can be found at:
+# https://github.com/srsudar/tmux-completion
 _tmux() 
 {
     local cur prev opts onePrev
