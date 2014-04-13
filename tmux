@@ -7,32 +7,21 @@ _tmux()
     local cur prev opts onePrev
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    for index in ${!COMP_WORDS[*]}
-    do
-        printf "%4d: %s\n" $index ${COMP_WORDS[$index]}
-    done
-    echo "COMP_CWORD is: " $COMP_CWORD
-    echo "COMP_WORDS is: " $COMP_WORDS
-    echo "cur is: " $cur
     prev="${COMP_WORDS[COMP_CWORD-2]}"
     onePrev="${COMP_WORDS[COMP_CWORD-1]}"
-    echo "prev is: " $prev
 
     # Maybe we want to list available windows. We're going to assume this is
     # defined as: [ls | list-session] -t .
     local windowCommands currentSessions
     windowCommands=("ls", "list-sessions")
-    if [ $prev = "ls" ] || [ $prev = "list-sessions" ] ; then
-        echo "in first if"
+    if [ $prev = "attach" ] || [ $prev = "attach-session" ] ; then
         if [ $onePrev = "-t" ] ; then
         # We get a list of all the names.
         # We're assuming this output is in the form:
         # name: some other crap
         # We'll get this by using cut--use ":" as a delimiter, and print the
         # first column.
-        echo "in the if"
         currentSessions=$(tmux ls | cut -d : -f 1)
-        echo $currentSessions
         COMPREPLY=($(compgen -W "${currentSessions}" -- ${cur}))  
         return 0
         fi
