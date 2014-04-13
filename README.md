@@ -10,9 +10,10 @@ is better than nothing, but if you've entered `tmux attach -t `, it should
 really only show you the possible session names. This extension does precisely
 that.
 
-In fact, it currently ONLY does that. There are smarter ways to do this, as
-well as ways to provide better support for things like tmux's `session:window`
-syntax, etc, but that isn't included at the moment.
+In fact, it currently ONLY does that. This extension provides tab completion
+for session names when trying to attach to tmux sessions. There are smarter
+ways to do this, as well as ways to provide better support for things like
+tmux's `session:window` syntax, etc, but that isn't included at the moment.
 
 ## Usage
 
