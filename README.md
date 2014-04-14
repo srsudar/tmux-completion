@@ -49,9 +49,6 @@ they run a cool project, so check it out.
 
 ## Issues
 
-It currently doesn't gracefully handle the case where you have no sessions
-created. This will be an easy fix.
-
 It might be nice to display windows whenever `-t` is given. This is a common
 flag for things like `kill`, `kill-session`, etc. I haven't spent enough time
 looking at the tmux commands to know if a session is always an appropriate
