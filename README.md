@@ -46,3 +46,17 @@ set in ``ls `brew --prefix bash-completion`/etc/bash_completion.d`` and
 ``ls `brew --prefix`/etc/bash_completion.d``. I might be wrong in thinking that
 the tmux script I modified came from the bash-completion guys. Either way,
 they run a cool project, so check it out.
+
+## Issues
+
+It currently doesn't gracefully handle the case where you have no sessions
+created. This will be an easy fix.
+
+It might be nice to display windows whenever `-t` is given. This is a common
+flag for things like `kill`, `kill-session`, etc. I haven't spent enough time
+looking at the tmux commands to know if a session is always an appropriate
+target there.
+
+You currently have to end with `-t `, not `-t`. Note the additional space in
+the first example. This could be made smarter to insert the space for you,
+maybe.
