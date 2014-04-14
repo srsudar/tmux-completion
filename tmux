@@ -25,7 +25,17 @@ _tmux()
         # name: some other crap
         # We'll get this by using cut--use ":" as a delimiter, and print the
         # first column.
-        currentSessions=$(tmux ls | cut -d : -f 1)
+        # If there are no sessions, we expect the following message on stderr:
+        # failed to connect to server: Connection refused
+        # In this case we'll return an empty list.
+        # NB: Since the failed to connect message is displayed on stderr, we
+        # need to pipe both stdout and stderr to cut. Therefore we are piping
+        # with |& rather than just |.
+        currentSessions=$(tmux ls |& cut -d : -f 1)
+        if [ "${currentSessions[0]}" = "failed to connect to server" ]; then
+            # we don't want to display any options, so clear the array.
+            currentSessions=$( )
+        fi
         COMPREPLY=($(compgen -W "${currentSessions}" -- ${cur}))  
         return 0
         fi
