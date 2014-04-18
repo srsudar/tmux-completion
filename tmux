@@ -18,8 +18,8 @@ _tmux()
     # defined as: [ls | list-session] -t .
     local windowCommands currentSessions
     windowCommands=("ls", "list-sessions")
-    if [ $prev = "attach" ] || [ $prev = "attach-session" ] ; then
-        if [ $onePrev = "-t" ] ; then
+    if [ "$prev" = "attach" ] || [ "$prev" = "attach-session" ] ; then
+        if [ "$onePrev" = "-t" ] ; then
         # We get a list of all the names.
         # We're assuming this output is in the form:
         # name: some other crap
