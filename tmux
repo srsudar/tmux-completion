@@ -6,41 +6,43 @@
 # The original version was modified to include support for things beyond simple
 # commands. This can be found at:
 # https://github.com/srsudar/tmux-completion
-_tmux() 
+_tmux()
 {
     local cur prev opts onePrev
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-2]}"
     onePrev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    # Maybe we want to list available windows. We're going to assume this is
-    # defined as: [ls | list-session] -t .
-    local windowCommands currentSessions
-    windowCommands=("ls", "list-sessions")
-    if [ "$prev" = "attach" ] || [ "$prev" = "attach-session" ] ; then
-        if [ "$onePrev" = "-t" ] ; then
-        # We get a list of all the names.
-        # We're assuming this output is in the form:
-        # name: some other crap
-        # We'll get this by using cut--use ":" as a delimiter, and print the
-        # first column.
-        # If there are no sessions, we expect the following message on stderr:
-        # failed to connect to server: Connection refused
-        # In this case we'll return an empty list.
-        # NB: Since the failed to connect message is displayed on stderr, we
-        # need to pipe both stdout and stderr to cut. Therefore we are piping
-        # with |& rather than just |.
-        currentSessions=$(tmux ls |& cut -d : -f 1)
-        if [ "${currentSessions[0]}" = "failed to connect to server" ]; then
-            # we don't want to display any options, so clear the array.
-            currentSessions=$( )
-        fi
-        COMPREPLY=($(compgen -W "${currentSessions}" -- ${cur}))  
-        return 0
+    if [ "$COMP_CWORD" -ge 2 ]; then
+        # Maybe we want to list available windows. We're going to assume this is
+        # defined as: [ls | list-session] -t .
+        local windowCommands currentSessions
+        windowCommands=("ls", "list-sessions")
+
+        prev="${COMP_WORDS[COMP_CWORD-2]}"
+        if [ "$prev" = "attach" ] || [ "$prev" = "attach-session" ] ; then
+            if [ "$onePrev" = "-t" ] ; then
+            # We get a list of all the names.
+            # We're assuming this output is in the form:
+            # name: some other crap
+            # We'll get this by using cut--use ":" as a delimiter, and print the
+            # first column.
+            # If there are no sessions, we expect the following message on stderr:
+            # failed to connect to server: Connection refused
+            # In this case we'll return an empty list.
+            # NB: Since the failed to connect message is displayed on stderr, we
+            # need to pipe both stdout and stderr to cut. Therefore we are piping
+            # with |& rather than just |.
+            currentSessions=$(tmux ls |& cut -d : -f 1)
+            if [ "${currentSessions[0]}" = "failed to connect to server" ]; then
+                # we don't want to display any options, so clear the array.
+                currentSessions=$( )
+            fi
+            COMPREPLY=($(compgen -W "${currentSessions}" -- ${cur}))
+            return 0
+            fi
         fi
     fi
-
 
     opts=" \
     attach-session \
@@ -126,7 +128,7 @@ _tmux()
     unlink-window \
     up-pane"
 
-    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
+    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
     return 0
 
 }
@@ -135,4 +137,4 @@ complete -F _tmux tmux
 # END tmux completion
 
 
- 	  	 
+
