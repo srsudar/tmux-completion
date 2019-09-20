@@ -20,7 +20,7 @@ _tmux()
         windowCommands=("ls", "list-sessions")
 
         prev="${COMP_WORDS[COMP_CWORD-2]}"
-        if [ "$prev" = "attach" ] || [ "$prev" = "attach-session" ] ; then
+        if [ "$prev" = "a" ] || [ "$prev" = "attach" ] || [ "$prev" = "attach-session" ] ; then
             if [ "$onePrev" = "-t" ] ; then
             # We get a list of all the names.
             # We're assuming this output is in the form:
