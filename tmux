@@ -22,7 +22,7 @@ _tmux() {
         windowCommands=("ls", "list-sessions")
 
         prev="${COMP_WORDS[COMP_CWORD - 2]}"
-        if [[ " ${array[@]} " =~ " ${prev} " ]]; then
+        if [[ " ${target_commands[@]} " =~ " ${prev} " ]]; then
             if [ "$onePrev" = "-t" ]; then
             # We get a list of all the names.
             # We're assuming this output is in the form:
@@ -40,7 +40,15 @@ _tmux() {
                 # we don't want to display any options, so clear the array.
                 currentSessions=$( )
             fi
-            COMPREPLY=($(compgen -W "${currentSessions}" -- ${cur}))
+
+            local IFS=$'\n'
+            CANDIDATES=($(compgen -W "${currentSessions}" -- "${cur}"))
+            # Correctly set our candidates to COMPREPLY
+            if [ ${#CANDIDATES[*]} -eq 0 ]; then
+               COMPREPLY=()
+            else
+               COMPREPLY=($(printf '"%s"\n' "${CANDIDATES[@]}"))
+            fi
             return 0
             fi
         fi
