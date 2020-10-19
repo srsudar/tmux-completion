@@ -1,3 +1,8 @@
+# Mostly Abandoned!
+
+I've mostly abandoned this repo. Instead, look at
+[this project](https://github.com/imomaliev/tmux-bash-completion).
+
 # tmux-completion
 
 > Better tab completion for tmux
