@@ -6,12 +6,14 @@
 # The original version was modified to include support for things beyond simple
 # commands. This can be found at:
 # https://github.com/srsudar/tmux-completion
-_tmux()
-{
-    local cur prev opts onePrev
+_tmux() {
+    local cur prev opts onePrev target_commands
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    onePrev="${COMP_WORDS[COMP_CWORD-1]}"
+    onePrev="${COMP_WORDS[COMP_CWORD - 1]}"
+    target_commands=("attach-session" "has-session" "kill-session" "list-clients" "lock-session"
+        "rename-session" "switch-client" "last-window" "list-windows" "next-window" "previous-window"
+        "set-hook" "show-hooks" "set-environment" "show-environment" "attach" "a")
 
     if [ "$COMP_CWORD" -ge 2 ]; then
         # Maybe we want to list available windows. We're going to assume this is
@@ -19,9 +21,9 @@ _tmux()
         local windowCommands currentSessions
         windowCommands=("ls", "list-sessions")
 
-        prev="${COMP_WORDS[COMP_CWORD-2]}"
-        if [ "$prev" = "attach" ] || [ "$prev" = "attach-session" ] ; then
-            if [ "$onePrev" = "-t" ] ; then
+        prev="${COMP_WORDS[COMP_CWORD - 2]}"
+        if [[ " ${target_commands[@]} " =~ " ${prev} " ]]; then
+            if [ "$onePrev" = "-t" ]; then
             # We get a list of all the names.
             # We're assuming this output is in the form:
             # name: some other crap
@@ -34,11 +36,19 @@ _tmux()
             # need to pipe both stdout and stderr to cut. Therefore we are piping
             # with |& rather than just |.
             currentSessions=$(tmux ls |& cut -d : -f 1)
-            if [ "${currentSessions[0]}" = "failed to connect to server" ]; then
+            if [[ "${currentSessions[0]}" == "no server running"* ]] || [[ "${currentSessions[0]}" == "error connecting to"* ]]; then
                 # we don't want to display any options, so clear the array.
                 currentSessions=$( )
             fi
-            COMPREPLY=($(compgen -W "${currentSessions}" -- ${cur}))
+
+            local IFS=$'\n'
+            CANDIDATES=($(compgen -W "${currentSessions}" -- "${cur}"))
+            # Correctly set our candidates to COMPREPLY
+            if [ ${#CANDIDATES[*]} -eq 0 ]; then
+               COMPREPLY=()
+            else
+               COMPREPLY=($(printf '"%s"\n' "${CANDIDATES[@]}"))
+            fi
             return 0
             fi
         fi
@@ -135,6 +145,3 @@ _tmux()
 complete -F _tmux tmux
 
 # END tmux completion
-
-
-
